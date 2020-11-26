@@ -2,11 +2,6 @@
 from scrap import getData
 from model import mlModel2
 import matplotlib.pyplot as plt
-from sklearn.ensemble import BaggingRegressor
-from sklearn.linear_model import ElasticNet
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, QuantileTransformer, MaxAbsScaler, RobustScaler, PowerTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
 
 years=1
@@ -23,14 +18,12 @@ print(coef)
 print(sevendaysPredict)
 
 norm__classifier_type=betspar["norm__classifier_type"]
-#if norm__classifier_type == 'MinMaxScaler':
-    #scaler = MinMaxScaler().fit(sevendaysdf)
+
 sevendaysdf = norm.transform(sevendaysdf)
 
 x = list(range(len(sevendaysdf)))
 plt.figure(figsize=(12,8))
 
-# Accessing each base_estimator (already fitted)
 for m in estimator.estimators_:
     print("IN")
     print(m.predict(sevendaysdf))

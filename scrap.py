@@ -19,9 +19,7 @@ def getData(NumberOfyears,whatToconsider):
     driver.get("https://www.investing.com/")
     dictall={"dxy": ["942611", "2067751", "US Dollar Index Historical Data"],"brent": ['8830','300004', 'Gold Futures Historical Data'],'gold': ['8833','300028', 'Brent Oil Futures Historical Data'],'bovespa': ['17920','2036142','Bovespa Historical Data'],'vix': ['44336', '2059974', 'CBOE Volatility Index Historical Data' ],'usd_jpy': ['3','106684', 'USD/JPY Historical Data'],'usd_cny':['2111','107259','USD/CNY Historical Data'],'usd_cop': ['2112','107260','USD/COP Historical Data'],'usd_mxn': ['39', '106701', 'USD/MXN Historical Data'],'usd_brl': ['2103', '107254', 'USD/BRL Historical Data']}
     
-    #def(anosatras,datainicial,datafinal,lista_id,lista_header)
-    #generate a list of prices from the past 4 years
-    # Clean the entire screen - Delete the html body
+
     initialDate, finalDate,dateRange = get_dates(NumberOfyears,"/")
     print(dateRange)
     print("dtae range")
@@ -42,19 +40,13 @@ def getData(NumberOfyears,whatToconsider):
             # Wait for the table to show up
             wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#curr_table')))
             soup=BeautifulSoup(driver.page_source,'html.parser')
-            #this soup returns <span class="arial_26 inlineblock pid-8828-last" dir="ltr" id="last_last">9.182,5</span>
+
             closePrices = soup.select("#curr_table tbody tr td:nth-of-type(2)")
             closeDates = soup.select("#curr_table tbody tr td:nth-of-type(1)")
-            # Save the dates data from the fist row of the table
-            #closeDates = driver.find_elements_by_css_selector("#curr_table tbody tr td:nth-of-type(1)")
-
-            # Save the prices data from the second row of the table
-            #closePrices = driver.find_elements_by_css_selector("#curr_table tbody tr td:nth-of-type(2)")
             
             #Create Dictionary
             TempListPricesAndDates=dict(map(lambda args:(closeDates[args[0]].text,args[1].text),enumerate(closePrices)))
-            #for index,item in enumerate(closePrices):
-                #tempDict[closeDates[index].getText()]=item.getText()
+
             print("Next")
             dataSeries = pd.Series(TempListPricesAndDates,index=dateRange)
             dataSeries= dataSeries.fillna(method="ffill")
