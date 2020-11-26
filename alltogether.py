@@ -1,7 +1,6 @@
 
 from scrap import getData
-from machine_learning import mlModel
-from ml3 import mlModel2
+from model import mlModel2
 import matplotlib.pyplot as plt
 from sklearn.ensemble import BaggingRegressor
 from sklearn.linear_model import ElasticNet
