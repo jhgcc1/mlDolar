@@ -6,7 +6,7 @@ def get_dates(N_ofyears,formatD):
 
     ano_final = datetime.datetime.now()
     ano_inicial = (datetime.datetime.now() - relativedelta(years=N_ofyears))
-    dateRange=pd.date_range(ano_inicial,(ano_final-timedelta(days=1)).strftime('%d/%m/%Y'),freq='d').strftime('%b %d, %Y')
+    dateRange=pd.date_range(ano_inicial,(ano_final-timedelta(days=0)).strftime('%d/%m/%Y'),freq='d').strftime('%b %d, %Y')
     if(formatD=="/"):
         ano_final = ano_final.strftime('%m/%d/%Y')
         ano_inicial=ano_inicial.strftime('%m/%d/%Y')

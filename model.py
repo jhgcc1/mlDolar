@@ -20,6 +20,16 @@ def mlModel2(df):
                 self.classifier_ = StandardScaler()
             elif self.classifier_type == 'MinMaxScaler':
                 self.classifier_ = MinMaxScaler()
+            elif self.classifier_type == 'MaxAbsScaler':
+                self.classifier_ = MaxAbsScaler()
+            elif self.classifier_type == 'RobustScaler':
+                self.classifier_ = RobustScaler()
+            elif self.classifier_type == 'QuantileTransformerUniform':
+                self.classifier_ = QuantileTransformer(output_distribution="uniform")
+            elif self.classifier_type == 'QuantileTransformerNormal':
+                self.classifier_ = QuantileTransformer(output_distribution="normal")
+            elif self.classifier_type == 'PowerTransformer':
+                self.classifier_ = PowerTransformer(method="yeo-johnson")
             else:
                 raise ValueError('Unkown classifier type.')
 
@@ -32,15 +42,13 @@ def mlModel2(df):
 
     l1_space = np.linspace(0, 1, 5)
     alpha=np.logspace(-1,1,5)
-    param_grid = {"clf__base_estimator__alpha":alpha,'clf__base_estimator__l1_ratio': l1_space,"norm__classifier_type":["MinMaxScaler","StandardScaler"]}
+    param_grid = {"clf__base_estimator__alpha":alpha,'clf__base_estimator__l1_ratio': l1_space,"norm__classifier_type":["MinMaxScaler","StandardScaler","MaxAbsScaler","RobustScaler","QuantileTransformerNormal","QuantileTransformerUniform","PowerTransformer"]}
     model = BaggingRegressor(ElasticNet(tol=1), n_estimators=20)
 
     pipe = Pipeline([('norm', MyClassifier()), ('clf', model)])
 
 
-    gm_cv = GridSearchCV(pipe, param_grid, cv=4,refit=True)
-    for param in gm_cv.get_params().keys():
-        print(param)
+    gm_cv = GridSearchCV(pipe, param_grid, cv=5,refit=True)
     X = df.loc[:,df.columns!="usd_brl"] 
     Y = df['usd_brl']
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.4, random_state=42)
@@ -54,12 +62,8 @@ def mlModel2(df):
     betspar = gm_cv.best_params_
     est = gm_cv.best_estimator_.named_steps['clf']
     norm = gm_cv.best_estimator_.named_steps['norm']
-    coef = "est.coef_"
-    intercept = "est.intercept_"
 
-    print("Tuned ElasticNet l1 ratio: {}".format(betspar))
+    print("Tuned ElasticNet best estimators: {}".format(betspar))
     print("Tuned ElasticNet R squared: {}".format(r2))
     print("Tuned ElasticNet MSE: {}".format(mse))
-    print("Coeficients: {}".format(coef))
-    print("Intercept: {}".format(intercept))
-    return gm_cv,betspar,r2,mse,coef,intercept,residual,est,norm
+    return gm_cv,betspar,r2,mse,residual,est,norm
