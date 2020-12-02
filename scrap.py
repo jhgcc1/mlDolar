@@ -102,7 +102,7 @@ def getData(NumberOfyears,whatToconsider):
         dataSeries = pd.Series(TempListPricesAndDates,index=dateRange)
         dataSeries= dataSeries.fillna(method="ffill")
         dataSeries= dataSeries.fillna(method="bfill")
-        dataframe[key]=dataSeries.str.replace(",","").astype(float)
+        dataframe["divida/pib eua"]=dataSeries.str.replace(",","").astype(float)
         driver.quit
         dataframe.index=(np.arange(start=0, stop=len(dataframe.index)))
     return dataframe
