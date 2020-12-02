@@ -25,8 +25,6 @@ x = list(range(len(sevendaysdf)))
 plt.figure(figsize=(12,8))
 
 for m in estimator.estimators_:
-    print(m.coef_)
-    print(m.intercept_)
     plt.plot(x, m.predict(sevendaysdf), color='grey', alpha=0.2, zorder=1)
 
 plt.scatter(x,sevendaysdfY, marker='o', color='orange', zorder=4)
